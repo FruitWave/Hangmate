@@ -21,6 +21,7 @@ public class Mani implements KeyListener {
 	JLabel jlbl;
 	static int puzzlesLeft;
 	static String currentPuzz;
+	String ya;
 
 	public static void main(String[] args) {
 		Mani manipulator = new Mani();
@@ -63,9 +64,10 @@ public class Mani implements KeyListener {
 
 	private void setUI() {
 		jfr = new JFrame("Hey There! Thanks For Taking A Look!");
+		jfr.addKeyListener(this);
 		jpnl = new JPanel();
 		jlbl = new JLabel();
-		String ya = new String();
+		ya = new String();
 
 		if (puzzlesLeft > 0) {
 			currentPuzz = bob.get(0);
@@ -90,12 +92,19 @@ public class Mani implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		System.out.println(e.getKeyChar());
+		String wow = "";
 		for (int i = 0; i < currentPuzz.length(); i++) {
 			if (currentPuzz.charAt(i) == e.getKeyChar()) {
-				// replace "_" with that letter
-			}
-		}
+				wow += e.getKeyChar();
+				System.out.println(ya);
+			} else {
+				wow += "_";
 
+			}
+
+		}
+		jlbl.setText(wow);
 	}
 
 	@Override
