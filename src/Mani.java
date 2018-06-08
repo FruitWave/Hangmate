@@ -21,21 +21,24 @@ public class Mani implements KeyListener {
 	JLabel jlbl;
 	static int puzzlesLeft;
 	static String currentPuzz;
-	String ya;
+	String yea;
+	static ArrayList<String> mastermind;
+	ArrayList<String> ja;
+	static int deathcount = 0;
 
 	public static void main(String[] args) {
 		Mani manipulator = new Mani();
-
+		mastermind = new ArrayList<>();
 		String inputted = JOptionPane.showInputDialog("Input desired quantity of knowledge to be aquired '\\('-')//' ");
 		int input = Integer.parseInt(inputted);
 		puzzlesLeft = input;
 		bob = manipulator.getWords(input);
 		manipulator.setUI();
+
 	}
 
 	private ArrayList<String> getWords(int input) {
-		ArrayList<String> ja = new ArrayList<>();
-		ArrayList<String> mastermind = new ArrayList<>();
+		ja = new ArrayList<>();
 		try {
 			j = new FileReader("src/dictionary.txt");
 			BufferedReader jae = new BufferedReader(j);
@@ -67,7 +70,7 @@ public class Mani implements KeyListener {
 		jfr.addKeyListener(this);
 		jpnl = new JPanel();
 		jlbl = new JLabel();
-		ya = new String();
+		yea = new String();
 
 		if (puzzlesLeft > 0) {
 			currentPuzz = bob.get(0);
@@ -75,9 +78,9 @@ public class Mani implements KeyListener {
 		}
 		for (int i = 0; i < currentPuzz.length(); i++) {
 			// jpnl.add(new JLabel("_"));
-			ya += "_";
+			yea += "_";
 		}
-		jlbl.setText(ya);
+		jlbl.setText(yea);
 		jpnl.add(jlbl);
 		jfr.add(jpnl);
 		jfr.pack();
@@ -92,19 +95,39 @@ public class Mani implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println(e.getKeyChar());
-		String wow = "";
-		for (int i = 0; i < currentPuzz.length(); i++) {
-			if (currentPuzz.charAt(i) == e.getKeyChar()) {
-				wow += e.getKeyChar();
-				System.out.println(ya);
-			} else {
-				wow += "_";
+		if (deathcount >= 10) {
+			System.exit(0);
+		}
+		if (e.getKeyCode() != 10) {
+
+			// System.out.println(e.getKeyChar());
+			boolean found = false;
+			for (int i = 0; i < currentPuzz.length(); i++) {
+				if (currentPuzz.charAt(i) == e.getKeyChar()) {
+					found = true;
+					String temporal = yea.substring(0, i);
+					String rift = yea.substring(i + 1, yea.length());
+					yea = temporal + e.getKeyChar() + rift;
+					// System.out.println(yea);
+				} else if ((i == currentPuzz.length() - 1) && (found == false)) {
+					deathcount++;
+				}
 
 			}
-
+			jlbl.setText(yea);
+			System.out.println(deathcount);
+		} else {
+			if (yea.equalsIgnoreCase(currentPuzz)) {
+				currentPuzz = bob.get(0);
+				bob.remove(0);
+				yea = "";
+				for (int i = 0; i < currentPuzz.length(); i++) {
+					// jpnl.add(new JLabel("_"));
+					yea += "_";
+				}
+				jlbl.setText(yea);
+			}
 		}
-		jlbl.setText(wow);
 	}
 
 	@Override
